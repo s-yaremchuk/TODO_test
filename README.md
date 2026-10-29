@@ -15,7 +15,7 @@ A full-stack TODO application built with React, Express, Prisma and PostgreSQL.
 
 - [Node.js](https://nodejs.org/) v20+
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [pnpm](https://pnpm.io/) — `npm install -g pnpm`
+- [pnpm](https://pnpm.io/) - `npm install -g pnpm`
 
 ### 1. Start the database
 

@@ -1,7 +1,7 @@
 {
   "name": "todo-backend",
   "version": "1.0.0",
-  "description": "TODO app backend — Express + Prisma + TypeScript",
+  "description": "TODO app backend - Express + Prisma + TypeScript",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
