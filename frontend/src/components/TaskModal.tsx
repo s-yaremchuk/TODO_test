@@ -52,75 +52,80 @@ export const TaskModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-40">
-      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          {initialTask ? 'Редагувати завдання' : 'Нове завдання'}
-        </h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
+      <div className="bg-[#161616] border-2 border-neutral-700 max-w-lg w-full p-6 text-white">
+        <div className="flex justify-between items-center pb-3 border-b border-neutral-800 mb-5">
+          <h3 className="font-sans font-bold uppercase tracking-tight text-sm text-white">
+            {initialTask ? 'EDIT TASK' : 'CREATE TASK'}
+          </h3>
+          <button
+            onClick={onClose}
+            className="font-mono text-xs text-neutral-500 hover:text-white px-2 py-1"
+          >
+            [ESC / CLOSE]
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Назва
+            <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+              TITLE *
             </label>
             <input
               type="text"
               {...register('title')}
-              placeholder="Наприклад: Підготувати звіт"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              placeholder="Введіть назву завдання"
+              className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD400] font-sans text-sm"
             />
             {errors.title && (
-              <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>
+              <p className="mt-1 font-mono text-xs text-[#E5322D]">{errors.title.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Опис (необов’язково)
+            <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+              DESCRIPTION
             </label>
             <textarea
               rows={3}
               {...register('description')}
-              placeholder="Додаткові деталі або нотатки..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm resize-none"
+              placeholder="Додатковий опис або деталі..."
+              className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD400] font-sans text-sm resize-none"
             />
             {errors.description && (
-              <p className="mt-1 text-xs text-red-600">{errors.description.message}</p>
+              <p className="mt-1 font-mono text-xs text-[#E5322D]">{errors.description.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Статус
+            <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+              STATUS
             </label>
             <select
               {...register('status')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm bg-white"
+              className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white focus:outline-none focus:border-[#FFD400] font-mono text-xs"
             >
-              <option value="TODO">До виконання</option>
-              <option value="IN_PROGRESS">В процесі</option>
-              <option value="DONE">Виконано</option>
+              <option value="TODO">TODO</option>
+              <option value="IN_PROGRESS">IN PROGRESS</option>
+              <option value="DONE">DONE</option>
             </select>
-            {errors.status && (
-              <p className="mt-1 text-xs text-red-600">{errors.status.message}</p>
-            )}
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-3 pt-4 border-t border-neutral-800">
             <button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+              className="font-mono text-xs uppercase px-4 py-2 border border-neutral-700 bg-[#1e1e1e] text-neutral-300 hover:bg-neutral-800 transition-colors duration-100"
             >
-              Скасувати
+              СКАСУВАТИ
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors"
+              className="font-mono text-xs uppercase font-bold px-5 py-2 bg-[#FFD400] text-black hover:bg-[#FFE033] disabled:opacity-50 transition-colors duration-100"
             >
-              {isLoading ? 'Збереження...' : initialTask ? 'Оновити' : 'Створити'}
+              {isLoading ? 'ЗБЕРЕЖЕННЯ...' : initialTask ? 'ОНОВИТИ' : 'СТВОРИТИ'}
             </button>
           </div>
         </form>

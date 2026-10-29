@@ -4,21 +4,26 @@ export const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <header className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-indigo-600">TaskFlow</span>
+    <header className="bg-[#111111] border-b border-neutral-800">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between h-14 items-center">
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs px-2 py-1 bg-[#FFD400] text-black font-bold uppercase tracking-wider">
+              TODO
+            </span>
+            <span className="font-sans font-extrabold tracking-tight text-white uppercase text-sm">
+              TASKFLOW
+            </span>
           </div>
 
           {user && (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">
-                Привіт, <strong className="text-gray-900">{user.name}</strong>
+              <span className="font-mono text-xs text-neutral-400">
+                USER: <span className="text-white font-medium">{user.name}</span>
               </span>
               <button
                 onClick={logout}
-                className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                className="font-mono text-xs uppercase px-3 py-1.5 border border-neutral-700 bg-[#161616] text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-100"
               >
                 Вийти
               </button>

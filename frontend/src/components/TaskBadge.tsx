@@ -2,16 +2,16 @@ import { TaskStatus } from '../types/task.types';
 
 const statusConfig: Record<TaskStatus, { label: string; className: string }> = {
   TODO: {
-    label: 'До виконання',
-    className: 'bg-amber-50 text-amber-700 border-amber-200',
+    label: 'TODO',
+    className: 'border-neutral-700 bg-neutral-900 text-neutral-400',
   },
   IN_PROGRESS: {
-    label: 'В процесі',
-    className: 'bg-blue-50 text-blue-700 border-blue-200',
+    label: 'IN PROGRESS',
+    className: 'border-blue-500/60 bg-blue-950/40 text-blue-400',
   },
   DONE: {
-    label: 'Виконано',
-    className: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    label: 'DONE',
+    className: 'border-emerald-500/60 bg-emerald-950/40 text-emerald-400',
   },
 };
 
@@ -20,7 +20,7 @@ export const TaskBadge = ({ status }: { status: TaskStatus }) => {
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${config.className}`}
+      className={`inline-flex items-center px-2 py-0.5 text-[11px] font-mono tracking-wider uppercase border ${config.className}`}
     >
       {config.label}
     </span>

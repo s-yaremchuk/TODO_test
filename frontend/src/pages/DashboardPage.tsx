@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Navbar } from '../components/Navbar';
 import { TaskFilter } from '../components/TaskFilter';
@@ -10,33 +11,43 @@ import { TaskFormData } from '../schemas/task.schema';
 
 export const DashboardPage = () => {
   const queryClient = useQueryClient();
-  const [filterStatus, setFilterStatus] = useState<TaskStatus | undefined>(undefined);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  // Fetch all tasks for counting
-  const { data: allTasks = [] } = useQuery({
-    queryKey: ['tasks', 'all'],
-    queryFn: () => getTasksApi(),
-  });
+  // Status from URL search params
+  const urlStatus = searchParams.get('status') as TaskStatus | null;
+  const filterStatus: TaskStatus | undefined =
+    urlStatus && ['TODO', 'IN_PROGRESS', 'DONE'].includes(urlStatus)
+      ? urlStatus
+      : undefined;
 
-  // Fetch filtered tasks
+  // Single query for all tasks: prevents duplicate network requests and 304 responses
   const {
-    data: tasks = [],
+    data: allTasks = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['tasks', filterStatus],
-    queryFn: () => getTasksApi(filterStatus),
+    queryKey: ['tasks'],
+    queryFn: () => getTasksApi(),
   });
 
-  // Calculate counts
-  const counts = {
-    all: allTasks.length,
-    todo: allTasks.filter((t) => t.status === 'TODO').length,
-    inProgress: allTasks.filter((t) => t.status === 'IN_PROGRESS').length,
-    done: allTasks.filter((t) => t.status === 'DONE').length,
-  };
+  // Calculate counts from the single dataset
+  const counts = useMemo(
+    () => ({
+      all: allTasks.length,
+      todo: allTasks.filter((t) => t.status === 'TODO').length,
+      inProgress: allTasks.filter((t) => t.status === 'IN_PROGRESS').length,
+      done: allTasks.filter((t) => t.status === 'DONE').length,
+    }),
+    [allTasks]
+  );
+
+  // Client-side filtering from the cached dataset (instant reaction, zero network roundtrips)
+  const filteredTasks = useMemo(() => {
+    if (!filterStatus) return allTasks;
+    return allTasks.filter((t) => t.status === filterStatus);
+  }, [allTasks, filterStatus]);
 
   // Mutations
   const createMutation = useMutation({
@@ -71,6 +82,14 @@ export const DashboardPage = () => {
     },
   });
 
+  const handleFilterChange = (status?: TaskStatus) => {
+    if (status) {
+      setSearchParams({ status });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   const handleOpenCreate = () => {
     setEditingTask(null);
     setIsModalOpen(true);
@@ -97,63 +116,70 @@ export const DashboardPage = () => {
     deleteMutation.mutate(id);
   };
 
+  const completionPercent =
+    allTasks.length > 0 ? Math.round((counts.done / allTasks.length) * 100) : 0;
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#111111] text-[#f4f4f5] flex flex-col font-sans">
       <Navbar />
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-neutral-800 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Мої завдання</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Керуйте щоденними завданнями та відстежуйте їх прогрес
-            </p>
+            <div className="font-mono text-xs uppercase text-[#FFD400] mb-1">
+              SYSTEM // TASKS
+            </div>
+            <h1 className="text-2xl font-black uppercase tracking-tight text-white">
+              СПИСОК ЗАВДАНЬ
+            </h1>
           </div>
 
-          <button
-            onClick={handleOpenCreate}
-            className="inline-flex items-center justify-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-          >
-            + Додати завдання
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="font-mono text-xs text-neutral-400 border border-neutral-800 bg-[#161616] px-3 py-2">
+              COMPLETED: <span className="text-white font-bold">{completionPercent}%</span>
+            </div>
+
+            <button
+              onClick={handleOpenCreate}
+              className="font-mono text-xs uppercase font-bold px-4 py-2 bg-[#FFD400] text-black hover:bg-[#FFE033] transition-colors duration-100 flex items-center gap-1.5"
+            >
+              <span>+</span>
+              <span>НОВЕ ЗАВДАННЯ</span>
+            </button>
+          </div>
         </div>
 
         <div className="mb-6">
           <TaskFilter
             currentFilter={filterStatus}
-            onChange={setFilterStatus}
+            onChange={handleFilterChange}
             counts={counts}
           />
         </div>
 
         {isLoading ? (
-          <div className="flex justify-center items-center py-16">
-            <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="border border-neutral-800 bg-[#141414] p-12 text-center font-mono text-xs text-neutral-500">
+            LOADING DATA...
           </div>
         ) : isError ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center text-sm text-red-700">
-            Не вдалося завантажити завдання. Перевірте з'єднання із сервером.
+          <div className="border border-red-900/60 bg-red-950/20 p-6 text-center font-mono text-xs text-[#E5322D]">
+            ERROR: НЕ ВДАЛОСЯ ЗАВАНТАЖИТИ ЗАВДАННЯ. ПЕРЕВІРТЕ ПІДКЛЮЧЕННЯ ДО СЕРВЕРА.
           </div>
-        ) : tasks.length === 0 ? (
-          <div className="bg-white border border-dashed border-gray-300 rounded-lg p-12 text-center">
-            <h3 className="text-base font-semibold text-gray-900 mb-1">
-              Завдань не знайдено
-            </h3>
-            <p className="text-sm text-gray-500 mb-4">
-              {filterStatus
-                ? 'Немає завдань із вибраним статусом.'
-                : 'У вас ще немає завдань. Створіть своє перше завдання!'}
+        ) : filteredTasks.length === 0 ? (
+          <div className="border border-neutral-800 bg-[#141414] p-12 text-center">
+            <p className="font-mono text-xs uppercase text-neutral-500 mb-4">
+              {filterStatus ? `НЕМАЄ ЗАВДАНЬ ЗІ СТАТУСОМ [${filterStatus}]` : 'СПИСОК ПОРОЖНІЙ'}
             </p>
             <button
               onClick={handleOpenCreate}
-              className="inline-flex items-center px-3.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 transition-colors"
+              className="font-mono text-xs uppercase px-4 py-2 border border-neutral-700 bg-[#1e1e1e] text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-100"
             >
-              Створити завдання
+              ДОДАТИ ПЕРШЕ ЗАВДАННЯ
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
-            {tasks.map((task) => (
+          <div className="space-y-2">
+            {filteredTasks.map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}

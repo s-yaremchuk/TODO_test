@@ -13,7 +13,7 @@ export const TaskItem = ({ task, onEdit, onDelete, onStatusChange }: TaskItemPro
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = () => {
-    if (confirm('Ви впевнені, що хочете видалити це завдання?')) {
+    if (confirm('Видалити завдання?')) {
       setIsDeleting(true);
       onDelete(task.id);
     }
@@ -22,69 +22,62 @@ export const TaskItem = ({ task, onEdit, onDelete, onStatusChange }: TaskItemPro
   const isDone = task.status === 'DONE';
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between gap-4">
+    <div className="border border-neutral-800 bg-[#141414] hover:border-neutral-700 p-4 transition-colors duration-100">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-1.5 flex-wrap">
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
+            <span className="font-mono text-[11px] text-neutral-500">
+              #{task.id.slice(-6)}
+            </span>
+            <TaskBadge status={task.status} />
             <h4
-              className={`text-base font-semibold text-gray-900 break-words ${
-                isDone ? 'line-through text-gray-400' : ''
+              className={`font-sans font-bold text-base text-white break-words ${
+                isDone ? 'line-through text-neutral-500' : ''
               }`}
             >
               {task.title}
             </h4>
-            <TaskBadge status={task.status} />
           </div>
 
           {task.description && (
             <p
-              className={`text-sm text-gray-600 mb-3 whitespace-pre-wrap break-words ${
-                isDone ? 'line-through text-gray-400' : ''
+              className={`text-sm text-neutral-400 mb-3 whitespace-pre-wrap break-words font-sans ${
+                isDone ? 'line-through text-neutral-600' : ''
               }`}
             >
               {task.description}
             </p>
           )}
 
-          <div className="flex items-center gap-4 text-xs text-gray-400">
-            <span>
-              Створено: {new Date(task.createdAt).toLocaleDateString('uk-UA', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
+          <div className="font-mono text-[11px] text-neutral-500">
+            CREATED: {new Date(task.createdAt).toISOString().replace('T', ' ').slice(0, 16)}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-neutral-800">
           <select
             value={task.status}
             onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
-            className="text-xs border border-gray-300 rounded px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="font-mono text-xs bg-[#111111] border border-neutral-700 text-neutral-200 px-2.5 py-1.5 focus:border-[#FFD400] focus:outline-none"
           >
-            <option value="TODO">До виконання</option>
-            <option value="IN_PROGRESS">В процесі</option>
-            <option value="DONE">Виконано</option>
+            <option value="TODO">TODO</option>
+            <option value="IN_PROGRESS">IN PROGRESS</option>
+            <option value="DONE">DONE</option>
           </select>
 
           <button
             onClick={() => onEdit(task)}
-            title="Редагувати"
-            className="px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-50 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+            className="font-mono text-xs uppercase px-3 py-1.5 border border-neutral-700 bg-[#1e1e1e] text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors duration-100"
           >
-            Змінити
+            EDIT
           </button>
 
           <button
             onClick={handleDelete}
             disabled={isDeleting}
-            title="Видалити"
-            className="px-2.5 py-1 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded hover:bg-red-100 disabled:opacity-50 transition-colors"
+            className="font-mono text-xs uppercase px-3 py-1.5 border border-red-900/60 bg-red-950/20 text-[#E5322D] hover:bg-red-950/40 disabled:opacity-50 transition-colors duration-100"
           >
-            Видалити
+            DEL
           </button>
         </div>
       </div>

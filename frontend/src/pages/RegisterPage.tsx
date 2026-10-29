@@ -40,107 +40,102 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#111111] text-[#f4f4f5] flex flex-col justify-center py-12 px-4 sm:px-6">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="text-center text-3xl font-extrabold text-gray-900">
-          Створення акаунта
+        <div className="font-mono text-xs text-[#FFD400] text-center mb-1 uppercase tracking-wider">
+          AUTH // REGISTER
+        </div>
+        <h2 className="text-center text-2xl font-black uppercase tracking-tight text-white">
+          СТВОРЕННЯ АКАУНТА
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Вже маєте акаунт?{' '}
-          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Увійти
+        <p className="mt-2 text-center font-mono text-xs text-neutral-500">
+          ВЖЕ Є АКАУНТ?{' '}
+          <Link to="/login" className="text-[#FFD400] hover:underline">
+            [УВІЙТИ]
           </Link>
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-[#141414] border border-neutral-800 p-8">
           {serverError && (
-            <div className="mb-4 bg-red-50 border-l-4 border-red-400 p-4 rounded text-sm text-red-700">
+            <div className="mb-6 bg-red-950/20 border border-red-900/60 p-3 font-mono text-xs text-[#E5322D]">
               {serverError}
             </div>
           )}
 
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Ваше ім'я
+              <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+                NAME
               </label>
-              <div className="mt-1">
-                <input
-                  type="text"
-                  autoComplete="name"
-                  {...register('name')}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="Олександр"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
-                )}
-              </div>
+              <input
+                type="text"
+                autoComplete="name"
+                {...register('name')}
+                className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD400] text-sm"
+                placeholder="Олександр"
+              />
+              {errors.name && (
+                <p className="mt-1 font-mono text-xs text-[#E5322D]">{errors.name.message}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
+              <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+                EMAIL
               </label>
-              <div className="mt-1">
-                <input
-                  type="email"
-                  autoComplete="email"
-                  {...register('email')}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="user@example.com"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-                )}
-              </div>
+              <input
+                type="email"
+                autoComplete="email"
+                {...register('email')}
+                className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD400] text-sm"
+                placeholder="user@example.com"
+              />
+              {errors.email && (
+                <p className="mt-1 font-mono text-xs text-[#E5322D]">{errors.email.message}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Пароль
+              <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+                PASSWORD
               </label>
-              <div className="mt-1">
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  {...register('password')}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="••••••••"
-                />
-                {errors.password && (
-                  <p className="mt-1 text-xs text-red-600">{errors.password.message}</p>
-                )}
-              </div>
+              <input
+                type="password"
+                autoComplete="new-password"
+                {...register('password')}
+                className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD400] text-sm"
+                placeholder="••••••••"
+              />
+              {errors.password && (
+                <p className="mt-1 font-mono text-xs text-[#E5322D]">{errors.password.message}</p>
+              )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Підтвердження пароля
+              <label className="block font-mono text-xs uppercase tracking-wider text-neutral-400 mb-1.5">
+                CONFIRM PASSWORD
               </label>
-              <div className="mt-1">
-                <input
-                  type="password"
-                  autoComplete="new-password"
-                  {...register('confirmPassword')}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="••••••••"
-                />
-                {errors.confirmPassword && (
-                  <p className="mt-1 text-xs text-red-600">{errors.confirmPassword.message}</p>
-                )}
-              </div>
+              <input
+                type="password"
+                autoComplete="new-password"
+                {...register('confirmPassword')}
+                className="w-full px-3 py-2 bg-[#111111] border border-neutral-700 text-white placeholder-neutral-600 focus:outline-none focus:border-[#FFD400] text-sm"
+                placeholder="••••••••"
+              />
+              {errors.confirmPassword && (
+                <p className="mt-1 font-mono text-xs text-[#E5322D]">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
-            <div>
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 transition-colors"
+                className="w-full py-2.5 px-4 font-mono text-xs uppercase font-bold bg-[#FFD400] text-black hover:bg-[#FFE033] focus:outline-none disabled:opacity-50 transition-colors duration-100"
               >
-                {isSubmitting ? 'Реєстрація...' : 'Зареєструватися'}
+                {isSubmitting ? 'РЕЄСТРАЦІЯ...' : 'ЗАРЕЄСТРУВАТИСЯ'}
               </button>
             </div>
           </form>
