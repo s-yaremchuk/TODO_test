@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { User } from '../types/auth.types';
 import { getMeApi } from '../api/auth.api';
 
@@ -13,6 +14,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,17 +44,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (newToken: string, newUser: User) => {
+    queryClient.clear();
     localStorage.setItem('token', newToken);
     setToken(newToken);
     setUser(newUser);
   };
 
   const logout = () => {
+    queryClient.clear();
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
   };
-
   return (
     <AuthContext.Provider value={{ user, token, isLoading, login, logout }}>
       {children}
