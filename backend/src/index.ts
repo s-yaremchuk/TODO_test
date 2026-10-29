@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -14,7 +15,9 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// TODO: Auth routes will be added in the next commit
+// Routes
+app.use('/api/auth', authRoutes);
+
 // TODO: Task routes will be added in the next commit
 
 app.listen(PORT, () => {
